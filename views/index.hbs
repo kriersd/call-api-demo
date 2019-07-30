@@ -5,7 +5,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Jazz Hands</title>
+  <title>Call API</title>
   <meta name="description" content="">
   <meta name="author" content="">
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
@@ -28,112 +28,56 @@
 </head>
 
 <script>
-//wait for the docuent to be available
-$(document).ready(function(){
-    var platform = "";
-    var timeleft = 60;
 
-    //get the environment platform variable from the server
-    //if("{{envplatform}}" == ""){
-    if("{{envplatform}}" == "IKS"){
-        platform = 'You Are Running On: <img src="images/IKS.png" alt="platformIcon" height="50px" width="70px"> IKS ';
-        document.getElementById("timer").style.color = "blue";
-    //}else if("{{envplatform}}" == ""){
-    }else if("{{envplatform}}" == "OpenShift"){
-        platform = 'You Are Running On:<img src="images/OpenShift.png" alt="platformIcon" height="50px" width="70px"> OpenShift ';
-        document.getElementById("timer").style.color = "red";
-        document.getElementById('progressBar').style.color = 'red';
 
-    }
-    else{
-        platform = 'You are on The Jazziest Platform! ';
-    }
-    //set the platform
-    document.getElementById("platform").innerHTML =  platform;
+function callAPI(rfid) {
+    //var test = document.getElementById("search").value;
+    console.log(rfid);
 
-    //start the counter interval
-    var myVar = setInterval(myTimer ,1000);
-        function myTimer() {
-            document.getElementById("timer").innerHTML =  " " + timeleft + " Seconds";
-            document.getElementById("progressBar").value = 60 - timeleft;
+    url = "https://api-gateway.rlldapicdp.poloralphlauren.com:9443/rl-esb-org/sandbox/rlpoc/v1/"+rfid+"/image"
+    alert("This is the URL we will call" + url;
 
-            timeleft--;
-            //when the timer reaches 0 stop it. 
-            if(timeleft == 0){
-                clearInterval(myVar);
-                document.getElementById("timer").innerHTML =  ' Refresh';
-            }
-        }
+    fetch(url)
+            .then((resp) => resp.json()) // Transform the data into json
+            .then(function(data) {
+                //alert("RESPONSE --->  " + JSON.stringify(data));
+                document.getElementById("json-return").value = JSON.stringify(data);
+            })
+            .catch(function(error) {
+                alert("WHOOPS -- We have an Error:  " + error);
+                document.getElementById("json-return").value = error;
+            });
+}
 
-    var index = -1;
-    //get the venues object from the server
-    var venues = {{{json data}}};
-    // set a listener for the radio buttons to be selected
-     $('#cities').change(function(){
-        //get the city value from the selected radio button
-        var city = $("input[name='cityRadio']:checked").val();
-        var listVenues = {};
 
-        //figure out which city was selected and prepare it to be created into a list
-        if (city=='sf'){
-            listVenues = venues.sf;
-        }else if (city == 'chi'){
-            listVenues = venues.chi;
-        }else if(city == 'ny'){
-            listVenues = venues.ny;
-        }
-        //make sure the div is empty and does not have any pre existing lists
-        $(list).empty();
 
-        //create the list of values
-        var str = "<ul>"
-        listVenues.forEach(function(listVenues) {
-            str += '<li><a href="https://www.google.com/maps?q=' + listVenues.lat + '+' + listVenues.lon + '" target="_blank">' + listVenues.name+'</a></li>';
-        }); 
-        str += '</ul>';
-        //inject the html list into the document
-        document.getElementById("list").innerHTML = str;
-     });
-});
+
 </script>
 
 <div class="container" id ="body">
     <div class="row">
-        <div class= "eight columns"  class="u-pull-left">
-            <div id="platform">You are on The Jazziest Platform! </div>
-            <div>
-                <progress value="0" max="60" id="progressBar"> </progress><a id='timer'></a>
-            </div>
-        </div> 
-        <div class="four columns" class="u-pull-right"><b>BitCoin is Currently Priced At: ${{data.bcPrice}}</b></div>
-    </div>
-    <div class="row">
-        <h1>Jazz Hands!</h1>
-        <h3>Pick A City To View Venues That Accept Bitcoin</h3>
+        <h1>Call API Demo</h1>
+        <h3>Let's Call The API</h3>
         </div>
     <div class="row">
         <div class="one-half column" style="float:left">
-            <form id="cities">
-                <h5><b>Cities</b></h5>
-                <input type="radio" name="cityRadio" value="sf"> San Francisco<br></input>
-                <input type="radio" name="cityRadio" value="chi"> Chicago<br></input>
-                <input type="radio" name="cityRadio" value="ny"> New York<br></input>
+            <form id="rfid-form">
+                <input id="rfid" type="text" name="rfid" placeholder="RFID">
+                <a class="button button-primary" onclick="callAPI(document.getElementById('rfid').value)">Submit</a>
             </form>
-            <img src="images/jazzhand-icon.png" alt="icon">
+            <img src="images/rfid.png" alt="icon">
+            <div >
+                <textarea id="json-return" rows="8" cols="120">
+
+                </textarea>
+            </div>
         </div>
         <div class="one-half column" style="float:right">
-            <h5><b>List of Venues:</b></h5>
-            <div id="list">
-                <ul name="listOfVenues">
-                    <l1>Pick a city to view venues!</l1>
-                </ul>
+            <h5><b>Response Image:</b></h5>
+            <div id="imageReturn">
             </div>
         </div>
     </div>
 
-    <div class= "footer">
-        <a class="button button-primary" href="https://github.com/kriersd/JazzHands" target="_blank">Walkthrough</a>
-        <a class="button button-primary" href="https://github.com/kriersd/JazzHands/raw/master/Documentation/Pitch.pdf" target="_blank">Pitch</a>
-    </div>
 </div>
 </html>

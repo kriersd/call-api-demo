@@ -38,9 +38,9 @@ Handlebars.registerHelper('json', function(context) {
 
 // These are the Express Routers
 var indexRouter = require('./routes/index');
-var healthRouter = require('./routes/health');
-var howtoRouter = require('./routes/howto');
-var pitchRouter = require('./routes/pitch');
+//var healthRouter = require('./routes/health');
+//var howtoRouter = require('./routes/howto');
+//var pitchRouter = require('./routes/pitch');
 
 var app = express();
 
@@ -59,9 +59,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // These are the routes.
 app.use('/', indexRouter);
-app.use('/health', healthRouter);
-app.use('/howto', howtoRouter);
-app.use('/pitch', pitchRouter);
+//app.use('/health', healthRouter);
+//app.use('/howto', howtoRouter);
+//app.use('/pitch', pitchRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
