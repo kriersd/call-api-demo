@@ -34,8 +34,8 @@ function callAPI(rfid) {
     //var test = document.getElementById("search").value;
     console.log(rfid);
 
-    url = "https://api-gateway.rlldapicdp.poloralphlauren.com:9443/rl-esb-org/sandbox/rlpoc/v1/"+rfid+"/image"
-    alert("This is the URL we will call" + url;
+    url = ("https://api-gateway.rlldapicdp.poloralphlauren.com:9443/rl-esb-org/sandbox/rlpoc/v1/"+rfid+"/image");
+    alert("This is the URL we will call" + url);
 
     fetch(url)
             .then((resp) => resp.json()) // Transform the data into json
